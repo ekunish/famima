@@ -11,7 +11,6 @@ import { setWasmPaths } from '@tensorflow/tfjs-backend-wasm'
 
 const Home: NextPage = () => {
 
-  tf.setBackend("cpu")
   return (
 
     <div className={styles.container}>
