@@ -68,7 +68,7 @@ const SelectWindow: React.FC = () => {
 
       if (bodies.allPoses.length > 0) {
         console.log(bodies.allPoses.length)
-        if (silentCount > 20) {
+        if (silentCount > 10) {
           console.log("comming!!!!!!!!!!!!!!!!!!!!!!!")
           // sound("sine", 0.5)
           bell();
