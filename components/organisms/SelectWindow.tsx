@@ -27,11 +27,11 @@ const SelectWindow: React.FC = () => {
     console.log('call getDisplayMedia')
 
     await navigator.mediaDevices.getDisplayMedia({
-      // audio: false,
-      // video: {
-      //   width: 1280,
-      //   height: 720
-      // }
+      audio: false,
+      video: {
+        width: 1280,
+        height: 720
+      }
     }).then((stream) => {
       // console.log(stream)
       videoRef.current!.srcObject = stream
@@ -46,6 +46,8 @@ const SelectWindow: React.FC = () => {
     const modelBody = await bodyPix.load()
     const video = document.getElementById('windowVideo') as HTMLVideoElement;
     // console.log(video)
+
+    bell();
 
     let silentCount = 0
 
@@ -66,7 +68,7 @@ const SelectWindow: React.FC = () => {
 
       if (bodies.allPoses.length > 0) {
         console.log(bodies.allPoses.length)
-        if (silentCount > 10) {
+        if (silentCount > 20) {
           console.log("comming!!!!!!!!!!!!!!!!!!!!!!!")
           // sound("sine", 0.5)
           bell();
@@ -78,7 +80,7 @@ const SelectWindow: React.FC = () => {
         silentCount = silentCount + 1
       }
 
-    }, 3000)
+    }, 1000)
   }
 
 
