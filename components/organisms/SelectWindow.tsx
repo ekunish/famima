@@ -17,10 +17,11 @@ const SelectWindow: React.FC = () => {
     osc.stop(sec)
   }
 
-  const initial = async () => {
+  const bell = () => {
+    const audioElm = new Audio()
+    audioElm.src = "famima.mp3"
+    audioElm.play()
   }
-
-  initial()
 
   const callGetDisplayMedia = async () => {
     console.log('call getDisplayMedia')
@@ -67,7 +68,8 @@ const SelectWindow: React.FC = () => {
         console.log(bodies.allPoses.length)
         if (silentCount > 10) {
           console.log("comming!!!!!!!!!!!!!!!!!!!!!!!")
-          sound("sine", 0.5)
+          // sound("sine", 0.5)
+          bell();
 
         }
         silentCount = 0
