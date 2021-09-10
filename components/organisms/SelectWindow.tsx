@@ -87,8 +87,7 @@ const SelectWindow: React.FC = () => {
 
   return (
     <div className="pt-24">
-      <p>SelectWindow</p>
-      <Button onClick={() => callGetDisplayMedia()}>Select</Button>
+      <Button onClick={() => callGetDisplayMedia()}>Select a window</Button>
       <video ref={videoRef} id="windowVideo" autoPlay playsInline muted />
     </div>
   )
