@@ -135,7 +135,7 @@ const SelectWindow: React.FC = () => {
   return (
     <div className="pt-10 text-center">
       <div className="mb-6">
-        <p className="mb-3">判定したい場所が大きく映っている状態にした上で、下記ボタンからZOOMを選択してください。</p>
+        <p className="mb-3">判定したい画面をピン留めした上で、下記ボタンからZOOMを選択してください。</p>
         <Button onClick={() => callGetDisplayMedia()}>Select a window</Button>
       </div>
       {showState &&
