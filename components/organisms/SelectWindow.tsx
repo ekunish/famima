@@ -114,7 +114,7 @@ const SelectWindow: React.FC = () => {
 
         if (commingFlag) {
           console.log("comming")
-          if (silentCount > 20) {
+          if (silentCount > 30) {
             bell();
           }
           silentCount = 0;
