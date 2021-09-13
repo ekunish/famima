@@ -23,7 +23,7 @@ const SelectWindow: React.FC = () => {
 
   const bell = () => {
     // sound("sine", 0.5)
-    audio && (audio.volume = 0.25) && audio.play();
+    audio && (audio.volume = 0.1) && audio.play();
   }
 
   const callGetDisplayMedia = async () => {
