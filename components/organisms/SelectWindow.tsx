@@ -23,7 +23,7 @@ const SelectWindow: React.FC = () => {
 
   const bell = () => {
     // sound("sine", 0.5)
-    audio && (audio.volume = 0.5) && audio.play()
+    audio && (audio.volume = 0.5) && audio.play();
   }
 
   const callGetDisplayMedia = async () => {
@@ -105,7 +105,7 @@ const SelectWindow: React.FC = () => {
           const leftKnee = body.pose.keypoints[13]
           const rightKnee = body.pose.keypoints[14]
 
-          const threshold = 0.85
+          const threshold = 0.7
           if ((leftKnee && leftKnee.score > threshold) || (rightKnee && rightKnee.score > threshold)) {
             setComming(true);
             commingFlag = true
