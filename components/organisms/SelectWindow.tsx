@@ -56,8 +56,8 @@ const SelectWindow: React.FC = () => {
   const estimateFace = async () => {
     const video = document.getElementById('windowVideo') as HTMLVideoElement;
     const output = document.getElementById('output') as HTMLCanvasElement;
-    output.width = video.width
-    output.height = video.height
+    output.width = 894
+    output.height = 504
 
     const ctx = output.getContext("2d")
 
@@ -105,16 +105,26 @@ const SelectWindow: React.FC = () => {
           const leftKnee = body.pose.keypoints[13]
           const rightKnee = body.pose.keypoints[14]
 
-          const threshold = 0.7
+          const threshold = 0.4
           if ((leftKnee && leftKnee.score > threshold) || (rightKnee && rightKnee.score > threshold)) {
             setComming(true);
             commingFlag = true
           }
         })
 
+
+        ctx?.clearRect(0, 0, video.width, video.height);
+        const backgroundColor = { r: 0, g: 0, b: 0, a: 0 };
+        const foregroundColor = { r: 127, g: 127, b: 127, a: 255 };
+        const mask = bodyPix.toMask(bodies, foregroundColor, backgroundColor);
+        const opacity = 0.7;
+
+        bodyPix.drawMask(output, video, mask, opacity, 0, false);
+
+
         if (commingFlag) {
           console.log("comming")
-          if (silentCount > 30) {
+          if (silentCount > 45 * 1000 / 200) {
             bell();
           }
           silentCount = 0;
@@ -128,7 +138,7 @@ const SelectWindow: React.FC = () => {
 
 
       }
-    }, 1000)
+    }, 200)
   }
 
 
@@ -141,8 +151,8 @@ const SelectWindow: React.FC = () => {
       {showState &&
         (comming ? <div className="bg-red-600 text-gray-100">来客</div>
           : <div className="bg-blue-600 text-gray-100">無人</div>)}
-      <video ref={videoRef} id="windowVideo" autoPlay playsInline muted />
       <canvas id="output" />
+      <video ref={videoRef} id="windowVideo" autoPlay playsInline muted />
     </div>
   )
 }
