@@ -105,7 +105,7 @@ const SelectWindow: React.FC = () => {
           const leftKnee = body.pose.keypoints[13]
           const rightKnee = body.pose.keypoints[14]
 
-          const threshold = 0.4
+          const threshold = 0.6
           if ((leftKnee && leftKnee.score > threshold) || (rightKnee && rightKnee.score > threshold)) {
             setComming(true);
             commingFlag = true
