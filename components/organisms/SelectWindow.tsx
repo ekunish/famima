@@ -150,7 +150,7 @@ const SelectWindow: React.FC = () => {
       </div>
       {showState &&
         (comming ? <div className="bg-red-600 text-gray-100">来客</div>
-          : <div className="bg-blue-600 text-gray-100">無人</div>)}
+          : <div className="bg-red-600 text-gray-100">無人</div>)}
       <canvas id="output" />
       <video ref={videoRef} id="windowVideo" autoPlay playsInline muted />
     </div>
