@@ -13,14 +13,14 @@ const Home: NextPage = () => {
 
   return (
 
-    <div className={styles.container}>
+    <div className="">
       <Head>
         <title>Famima App</title>
         <meta name="description" content="Famima app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <main className="">
         <SelectWindow />
       </main>
 

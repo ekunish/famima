@@ -8,9 +8,8 @@ const SelectWindow: React.FC = () => {
   const [showState, setShowState] = useState(false)
   const [comming, setComming] = useState(false)
   const [model, setModel] = useState<bodyPix.BodyPix>()
-  const videoRef = useRef<HTMLVideoElement>(null)
-
   const [audio, setAudio] = useState<HTMLAudioElement>()
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   const sound = (type: OscillatorType, sec: number | undefined) => {
     const ctx = new AudioContext()
@@ -23,7 +22,7 @@ const SelectWindow: React.FC = () => {
 
   const bell = () => {
     // sound("sine", 0.5)
-    audio && (audio.volume = 0.08) && audio.play();
+    audio && (audio.volume = 0.05) && audio.play();
   }
 
   const callGetDisplayMedia = async () => {
@@ -36,7 +35,6 @@ const SelectWindow: React.FC = () => {
         height: 504
       }
     }).then((stream) => {
-      // console.log(stream)
       videoRef.current!.srcObject = stream
       estimateFace()
 
@@ -45,9 +43,6 @@ const SelectWindow: React.FC = () => {
 
   useEffect(() => {
     setAudio(new Audio("famima.mp3"))
-  }, [])
-
-  useEffect(() => {
     bodyPix.load().then((net) => {
       setModel(net);
     })
@@ -61,98 +56,101 @@ const SelectWindow: React.FC = () => {
 
     const ctx = output.getContext("2d")
 
-    // console.log(video)
 
     setShowState(true)
     bell();
 
+    var isLoading = true;
+
+    video.onloadeddata = (event) => {
+      isLoading = false;
+    };
+
+
     let silentCount = 0
 
     setInterval(async () => {
+
       const bodyPixOption = {
         flipHorizontal: false,
         internalResolution: "medium",
-        segmentationThreshold: 0.3,
-        maxDetections: 4,
-        scoreThreshold: 0.3,
+        segmentationThreshold: 0.5,
+        maxDetections: 3,
+        scoreThreshold: 0.2,
         nmsRadius: 20,
-        minKeypointScore: 0.3,
+        minKeypointScore: 0.2,
         refineSteps: 10,
       } as PersonInferenceConfig;
 
-      if (model) {
-        // video.addEventListener('loadeddata', async () => {
-        // const bodies = await model.segmentPerson(video, bodyPixOption);
-        // if (bodies.allPoses.length > 0) {
-        //   console.log(bodies.allPoses.length)
-        //   setComming(true)
-        //   if (silentCount > 10) {
-        //     console.log("comming!!!!!!!!!!!!!!!!!!!!!!!")
-        //     bell();
-        //   }
-        //   silentCount = 0
-        // } else {
-        //   setComming(false)
-        //   console.log("none")
-        //   silentCount = silentCount + 1
-        // }
-
+      if (model && !isLoading) {
         const bodies = await model.segmentMultiPerson(video, bodyPixOption);
         setComming(false);
         let commingFlag = false
-        // console.log(bodies)
         bodies && bodies.map((body) => {
           const leftKnee = body.pose.keypoints[13]
           const rightKnee = body.pose.keypoints[14]
-
-          const threshold = 0.6
+          const threshold = 0.4
+          // console.log(leftKnee.position.y, rightKnee.position.y);
           if ((leftKnee && leftKnee.score > threshold) || (rightKnee && rightKnee.score > threshold)) {
-            setComming(true);
-            commingFlag = true
+            if ((leftKnee.position.y > 200) || (rightKnee.position.y > 200)) {
+              commingFlag = true;
+              setComming(commingFlag);
+            }
           }
         })
 
-
         ctx?.clearRect(0, 0, video.width, video.height);
         const backgroundColor = { r: 0, g: 0, b: 0, a: 0 };
-        const foregroundColor = { r: 127, g: 127, b: 127, a: 255 };
+        const foregroundColor = { r: 255, g: 0, b: 0, a: 255 };
         const mask = bodyPix.toMask(bodies, foregroundColor, backgroundColor);
         const opacity = 0.7;
 
         bodyPix.drawMask(output, video, mask, opacity, 0, false);
 
-
+        console.log(silentCount);
         if (commingFlag) {
-          console.log("comming")
-          if (silentCount > 45 * 1000 / 200) {
+          if (silentCount > 45 * 1000 / 100) {
             bell();
+            console.log("comming")
+            var now = new Date();
+            console.log(now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds());
           }
           silentCount = 0;
         } else {
-          console.log("silent")
           silentCount = silentCount + 1
         }
-
-
-        // })
-
-
       }
-    }, 200)
+    }, 100)
   }
 
 
   return (
-    <div className="pt-10 text-center">
-      <div className="mb-6">
-        <p className="mb-3">判定したい画面をピン留めした上で、下記ボタンからZOOMを選択してください。</p>
+    <div className="text-center container mx-auto">
+      <div className="mb-5 mt-16">
+        <p className="mb-5">判定したい画面をピン留めした上で、下記ボタンからZOOMを選択してください。</p>
         <Button onClick={() => callGetDisplayMedia()}>Select a window</Button>
       </div>
       {showState &&
         (comming ? <div className="bg-red-600 text-gray-100">来客</div>
-          : <div className="bg-red-600 text-gray-100">無人</div>)}
-      <canvas id="output" />
-      <video ref={videoRef} id="windowVideo" autoPlay playsInline muted />
+          : <div className="bg-blue-600 text-gray-100">無人</div>)
+      }
+      <div className="flex justify-center mt-5">
+        <div className="absolute">
+          <video ref={videoRef} id="windowVideo" autoPlay playsInline muted style={{
+            visibility: 'hidden',
+            width: 890,
+            height: 504
+          }}
+            className="" />
+        </div>
+        <div className="absolute">
+          <canvas id="output" className=""
+            style={{
+              width: 890,
+              height: 504
+            }} />
+        </div>
+      </div>
     </div>
   )
 }
