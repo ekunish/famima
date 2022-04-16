@@ -70,7 +70,7 @@ const SelectWindow: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    let counter = 0;
+    let counter = thresholdCount;
     setInterval(async () => {
       if (model && isLoading) {
         const bodies = await model.segmentMultiPersonParts(videoRef.current!, bodyPixOption);
@@ -147,7 +147,7 @@ const SelectWindow: React.FC = () => {
       {(comming ? <div className="bg-red-600 text-gray-100">来客</div>
         : <div className="bg-blue-600 text-gray-100">無人</div>)}
       <div className="flex flex-col justify-start text-left">
-      <div className="">Silent Count: {Math.round(silentCount)} / {thresholdCount}</div>
+      <div className="">Detection CoolTime: {Math.round(silentCount)} / {thresholdCount}</div>
       <div className='relative'>
           <label>Segment: </label>
         <label className="mx-1 inline-flex items-center">
